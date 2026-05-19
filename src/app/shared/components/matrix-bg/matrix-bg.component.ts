@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
-/** Lluvia Matrix sutil — sin suelo 3D ni capas extra */
 @Component({
   selector: 'app-matrix-bg',
   standalone: true,
@@ -21,7 +20,7 @@ import { isPlatformBrowser } from '@angular/common';
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      opacity: 0.2;
+      opacity: 0.22;
     }
     `,
   ],
@@ -38,8 +37,8 @@ export class MatrixBgComponent implements AfterViewInit, OnDestroy {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const chars = 'アイウエオカキク0123456789ABCDEF';
-    const size = 16;
+    const chars = 'アイウエオカキクケコ0123456789ABCDEF';
+    const size = 15;
     let cols = 0;
     let drops: number[] = [];
 
@@ -47,19 +46,19 @@ export class MatrixBgComponent implements AfterViewInit, OnDestroy {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       cols = Math.floor(canvas.width / size);
-      drops = Array(cols).fill(0).map(() => Math.random() * -50);
+      drops = Array(cols).fill(0).map(() => Math.random() * -40);
     };
     resize();
     this.onResize = resize;
     window.addEventListener('resize', resize);
 
     const draw = (): void => {
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.06)';
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.07)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.font = `${size}px "JetBrains Mono", monospace`;
-      ctx.fillStyle = '#4ade80';
       for (let i = 0; i < cols; i++) {
         const ch = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillStyle = i % 5 === 0 ? '#b8ff9a' : '#4ade80';
         ctx.fillText(ch, i * size, drops[i] * size);
         if (drops[i] * size > canvas.height && Math.random() > 0.98) drops[i] = 0;
         drops[i]++;

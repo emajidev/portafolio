@@ -1,8 +1,9 @@
-import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatrixBgComponent } from './shared/components/matrix-bg/matrix-bg.component';
+import { ScrollProgressComponent } from './shared/components/scroll-progress/scroll-progress.component';
+import { PreloaderComponent } from './shared/components/preloader/preloader.component';
 import { HeaderComponent } from './layout/header/header.component';
 import { FooterBarComponent } from './layout/footer-bar/footer-bar.component';
 import { ScrollService } from './core/services/scroll.service';
@@ -10,10 +11,21 @@ import { ScrollService } from './core/services/scroll.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatrixBgComponent, HeaderComponent, FooterBarComponent],
+  imports: [
+    RouterOutlet,
+    MatrixBgComponent,
+    ScrollProgressComponent,
+    PreloaderComponent,
+    HeaderComponent,
+    FooterBarComponent,
+  ],
   template: `
+    @if (loading()) {
+      <app-preloader (loaded)="loading.set(false)" />
+    }
     <app-matrix-bg />
-    <div class="page-glow" aria-hidden="true"></div>
+    <div class="ambient-glow" aria-hidden="true"></div>
+    <app-scroll-progress />
     <app-header />
     <main class="relative z-10">
       <router-outlet />
@@ -22,12 +34,14 @@ import { ScrollService } from './core/services/scroll.service';
   `,
   styles: [
     `
-    .page-glow {
+    .ambient-glow {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgb(57 255 20 / 6%), transparent 60%);
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 20%, rgb(57 255 20 / 5%), transparent),
+        radial-gradient(ellipse 50% 35% at 80% 70%, rgb(139 255 77 / 4%), transparent);
     }
     `,
   ],
@@ -35,10 +49,13 @@ import { ScrollService } from './core/services/scroll.service';
 export class AppComponent implements OnInit {
   private readonly scroll = inject(ScrollService);
   private readonly platformId = inject(PLATFORM_ID);
+  readonly loading = signal(true);
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) this.scroll.init();
+    if (!isPlatformBrowser(this.platformId)) {
+      this.loading.set(false);
+      return;
+    }
+    this.scroll.init();
   }
 }
-
-export { provideAnimations };
