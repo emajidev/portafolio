@@ -25,7 +25,7 @@ export class ScrollService {
         this.scrollIdleTimer = setTimeout(() => {
           this.isScrolling.set(false);
           this.scrollDirection.set('idle');
-        }, 140);
+        }, 220);
       }
       this.lastScrollY = y;
       this.scrolled.set(y > 30);

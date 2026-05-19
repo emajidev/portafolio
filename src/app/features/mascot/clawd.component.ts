@@ -13,6 +13,8 @@ import {
   signal,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { MascotChatService } from '../../core/services/mascot-chat.service';
 import { ScrollService } from '../../core/services/scroll.service';
 import { MASCOT_ANNOYED_MSGS, MASCOT_LAUGH_MSGS, MASCOT_MSGS } from '../../core/data/portfolio.data';
 import { COLS, ClawdFace, FACE_GRIDS, ROWS } from './clawd-pixel.grid';
@@ -116,6 +118,9 @@ const EDGE_PAD = 8;
       display: flex;
       align-items: flex-end;
       justify-content: center;
+    }
+
+    .clawd--hero:not(.clawd--detached) {
       animation: float 5s ease-in-out infinite;
     }
 
@@ -148,8 +153,25 @@ const EDGE_PAD = 8;
     }
 
     .clawd--sm {
-      transform: scale(0.45);
-      transform-origin: left center;
+      animation: none !important;
+      transform: none !important;
+      flex-shrink: 0;
+    }
+
+    .clawd--sm .clawd-body,
+    .clawd--sm .clawd-pixels,
+    .clawd--sm .clawd-glow {
+      animation: none !important;
+      transform: none !important;
+    }
+
+    .clawd--sm .px:not(.px-hand):not(.px-foot) {
+      animation: none !important;
+      transform: none !important;
+    }
+
+    .clawd--sm .px-happy-eye {
+      transform: scaleY(0.3) !important;
     }
 
     .clawd-body {
@@ -271,9 +293,9 @@ const EDGE_PAD = 8;
       overflow: visible;
     }
 
-    .clawd--dragging:not(.clawd--detached),
-    .clawd--flying:not(.clawd--detached),
-    .clawd--scrolling:not(.clawd--detached) {
+    .clawd--dragging:not(.clawd--detached):not(.clawd--sm),
+    .clawd--flying:not(.clawd--detached):not(.clawd--sm),
+    .clawd--scrolling:not(.clawd--detached):not(.clawd--sm) {
       animation: float 5s ease-in-out infinite, body-fly-tilt 0.28s ease-in-out infinite alternate;
     }
 
@@ -328,6 +350,22 @@ const EDGE_PAD = 8;
       animation: fly-foot-right 0.2s ease-in-out infinite alternate-reverse;
     }
 
+    .clawd--sm.clawd--scrolling .clawd-pixels--airborne .px-hand-left {
+      animation: fly-hand-left 0.22s ease-in-out infinite alternate !important;
+    }
+
+    .clawd--sm.clawd--scrolling .clawd-pixels--airborne .px-hand-right {
+      animation: fly-hand-right 0.22s ease-in-out infinite alternate !important;
+    }
+
+    .clawd--sm.clawd--scrolling .clawd-pixels--airborne .px-foot-left {
+      animation: fly-foot-left 0.2s ease-in-out infinite alternate-reverse !important;
+    }
+
+    .clawd--sm.clawd--scrolling .clawd-pixels--airborne .px-foot-right {
+      animation: fly-foot-right 0.2s ease-in-out infinite alternate-reverse !important;
+    }
+
     .clawd-pixels--laugh {
       animation: laugh-shake 0.55s ease-in-out !important;
     }
@@ -356,7 +394,12 @@ const EDGE_PAD = 8;
     }
 
     .clawd--sm .clawd-pixels {
-      --sz: 5px;
+      --sz: 6px;
+    }
+
+    .clawd--sm .clawd-glow {
+      width: 72px;
+      height: 14px;
     }
 
     .px {
@@ -481,7 +524,10 @@ export class ClawdComponent implements OnInit, OnDestroy {
   readonly detachedH = signal(0);
   readonly activeGrid = computed(() => FACE_GRIDS[this.face()]);
   readonly limbActive = computed(
-    () => this.isDragging() || this.isFlying() || this.scroll.isScrolling(),
+    () =>
+      this.isDragging() ||
+      this.isFlying() ||
+      this.scroll.isScrolling(),
   );
   readonly dragEnabled = computed(() => this.variant() === 'hero' && !this.small());
   readonly scroll = inject(ScrollService);
@@ -493,6 +539,8 @@ export class ClawdComponent implements OnInit, OnDestroy {
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly renderer = inject(Renderer2);
+  private readonly mascotChat = inject(MascotChatService);
+  private chatSub?: Subscription;
   private anchor: Comment | null = null;
   private blinkTimer?: ReturnType<typeof setInterval>;
   private msgTimer?: ReturnType<typeof setInterval>;
@@ -525,6 +573,19 @@ export class ClawdComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
+
+    if (this.small()) {
+      this.chatSub = this.mascotChat.userMessageSent.subscribe(() => {
+        if (!this.isDragging() && !this.isFlying()) this.triggerHappy();
+      });
+      this.blinkTimer = setInterval(() => {
+        if (this.face() !== 'neutral') return;
+        this.blink.set(true);
+        setTimeout(() => this.blink.set(false), 130);
+      }, 3200);
+      return;
+    }
+
     this.showMessage(0);
     this.blinkTimer = setInterval(() => {
       if (this.face() !== 'neutral') return;
@@ -539,6 +600,7 @@ export class ClawdComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.chatSub?.unsubscribe();
     clearInterval(this.blinkTimer);
     clearInterval(this.msgTimer);
     clearTimeout(this.typeTimeout);
