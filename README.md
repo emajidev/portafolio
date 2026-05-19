@@ -1,27 +1,69 @@
-# Portfolio
+# Emanuel J.M — Portafolio
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.21.
+Portafolio personal con estética **Matrix / Cyberpunk**, construido con **Angular 18**, **TailwindCSS** y la mascota **Claw'd**.
 
-## Development server
+**Repositorio:** https://github.com/emajidev/portafolio
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Stack
 
-## Code scaffolding
+- Angular 18 (standalone, signals)
+- TailwindCSS 3
+- GSAP
+- Deploy en Vercel (plan gratuito)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Desarrollo local
+
+```bash
+npm install
+npm start
+```
+
+Abre [http://localhost:4200](http://localhost:4200)
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+npm run build:prod
+```
 
-## Running unit tests
+Salida estática: `dist/portfolio/browser`
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Deploy en Vercel
 
-## Running end-to-end tests
+### Opción A — Desde el dashboard (recomendado)
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+1. Entra en [vercel.com](https://vercel.com) e inicia sesión con GitHub.
+2. **Add New Project** → importa `emajidev/portafolio`.
+3. Vercel detectará `vercel.json` automáticamente:
+   - **Build Command:** `npm run vercel-build`
+   - **Output Directory:** `dist/portfolio/browser`
+4. Pulsa **Deploy**.
 
-## Further help
+### Opción B — CLI
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+npm i -g vercel
+vercel login
+vercel --prod
+```
+
+### Variables de entorno (opcional)
+
+| Variable | Descripción |
+|----------|-------------|
+| — | No se requieren variables para el deploy estático |
+
+## Estructura
+
+```
+src/app/
+├── core/       # Datos y servicios
+├── features/   # Mascota Claw'd
+├── layout/     # Header, footer bar
+├── pages/      # Home
+└── shared/     # Matrix background
+```
+
+## Licencia
+
+MIT © Emanuel J.M
