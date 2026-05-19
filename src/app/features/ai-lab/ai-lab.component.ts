@@ -18,7 +18,7 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
         <div appReveal class="terminal">
           <div class="terminal-bar">
             <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-            <span class="terminal-title">clawd&#64;ai-lab</span>
+            <span class="terminal-title">davi&#64;ai-lab</span>
           </div>
           <div class="terminal-body">
             @for (line of lines(); track $index) {
@@ -122,7 +122,7 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
 })
 export class AiLabComponent implements OnInit, OnDestroy {
   readonly experiments = AI_EXPERIMENTS;
-  readonly lines = signal<string[]>(['[BOOT] AI Lab v2.4.1', '[OK] Claw\'d connected']);
+  readonly lines = signal<string[]>(['[BOOT] AI Lab v2.4.1', '[OK] Davi connected']);
   cmd = '';
   private readonly platformId = inject(PLATFORM_ID);
   private interval?: ReturnType<typeof setInterval>;

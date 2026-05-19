@@ -1,12 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RevealDirective } from '../../shared/directives/reveal.directive';
-import { ClawdComponent } from '../mascot/clawd.component';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [ReactiveFormsModule, RevealDirective, ClawdComponent],
+  imports: [ReactiveFormsModule, RevealDirective],
   template: `
     <section id="contact" class="section pb-36">
       <div class="container grid gap-10 lg:grid-cols-2 items-start">
@@ -18,7 +17,6 @@ import { ClawdComponent } from '../mascot/clawd.component';
               <a [href]="s.url" target="_blank" rel="noopener" class="social-link interactive">{{ s.label }}</a>
             }
           </div>
-          <div class="mt-8 hidden lg:block"><app-clawd /></div>
         </div>
         <form appReveal [delay]="100" class="contact-form" [formGroup]="form" (ngSubmit)="send()">
           @if (sent()) {

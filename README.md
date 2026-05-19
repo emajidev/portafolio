@@ -1,6 +1,6 @@
 # Emanuel J.M — Portafolio
 
-Portafolio personal con estética **Matrix / Cyberpunk**, construido con **Angular 18**, **TailwindCSS** y la mascota **Claw'd**.
+Portafolio personal con estética **Matrix / Cyberpunk**, construido con **Angular 18**, **TailwindCSS** y la mascota **Davi**.
 
 **Repositorio:** https://github.com/emajidev/portafolio
 
@@ -58,7 +58,7 @@ vercel --prod
 ```
 src/app/
 ├── core/       # Datos y servicios
-├── features/   # Mascota Claw'd
+├── features/   # Mascota Davi
 ├── layout/     # Header, footer bar
 ├── pages/      # Home
 └── shared/     # Matrix background

@@ -60,7 +60,7 @@ export class PreloaderComponent implements OnInit {
   ngOnInit(): void {
     const steps = [
       { p: 25, t: 'Cargando Matrix...' },
-      { p: 55, t: 'Activando Claw\'d...' },
+      { p: 55, t: 'Activando Davi...' },
       { p: 85, t: 'Sync DevOps stack...' },
       { p: 100, t: 'Listo.' },
     ];

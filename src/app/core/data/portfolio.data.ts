@@ -113,18 +113,32 @@ export const EXPERIENCES: Experience[] = [
 ];
 
 export const AI_EXPERIMENTS = [
-  { title: "Claw'd Copilot v2", status: 'active', log: '[OK] Copilot online — 128k context' },
+  { title: 'Davi Copilot v2', status: 'active', log: '[OK] Copilot online — 128k context' },
   { title: 'Auto-Deploy Bot', status: 'active', log: '[SCAN] Analyzing 3 open PRs...' },
   { title: 'Log Anomaly Detector', status: 'beta', log: '[ML] Precision: 0.94 | Recall: 0.91' },
   { title: 'Code Review AI', status: 'beta', log: '[REVIEW] PR #142 — 3 suggestions' },
 ];
 
 export const MASCOT_MSGS = [
-  '¡Hola! Soy Claw\'d, tu copiloto personal 🤖',
-  'Explora mis proyectos, experimentos e ideas 🚀',
-  'Scroll para ver algo increíble ↓',
-  '¿Listo para construir el futuro?',
-  'Actualmente cocinando ideas con IA...',
+  '¡Hola! Soy Davi, tu copiloto personal. Estoy aquí para guiarte por mi universo tech.',
+  'Explora mis proyectos, experimentos e ideas. ¡Hay mucho que ver!',
+  'Scroll para descubrir algo increíble.',
+  '¿Listo para construir el futuro juntos?',
+  'Actualmente cocinando ideas con IA y DevOps...',
+];
+
+export const MASCOT_LAUGH_MSGS = [
+  '¡Ja ja ja! ¡Me haces reír!',
+  '¡Jajaja! Otra vez, otra vez.',
+  'Davi está muy feliz contigo.',
+  '¡Eso me dio risa! ¿Otra vez?',
+];
+
+export const MASCOT_ANNOYED_MSGS = [
+  '¡Ey! ¡No me sacudas!',
+  '¿En serio? Estoy mareado...',
+  'Davi no aprueba el shake.',
+  '¡Basta! Necesito un café.',
 ];
 
 export const ABOUT_CARDS = [
