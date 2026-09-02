@@ -6,6 +6,7 @@ import { SkillsComponent } from '../../features/skills/skills.component';
 import { ProjectsComponent } from '../../features/projects/projects.component';
 import { AiLabComponent } from '../../features/ai-lab/ai-lab.component';
 import { ArcadeComponent } from '../../features/arcade/arcade.component';
+import { CompaniesMarqueeComponent } from '../../features/companies-marquee/companies-marquee.component';
 import { ExperienceComponent } from '../../features/experience/experience.component';
 import { ContactComponent } from '../../features/contact/contact.component';
 
@@ -20,6 +21,7 @@ import { ContactComponent } from '../../features/contact/contact.component';
     ProjectsComponent,
     AiLabComponent,
     ArcadeComponent,
+    CompaniesMarqueeComponent,
     ExperienceComponent,
     ContactComponent,
   ],
@@ -31,6 +33,7 @@ import { ContactComponent } from '../../features/contact/contact.component';
     <app-projects />
     <app-ai-lab />
     <app-arcade />
+    <app-companies-marquee />
     <app-experience />
     <app-contact />
   `,

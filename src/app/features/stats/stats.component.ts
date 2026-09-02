@@ -4,19 +4,20 @@ import gsap from 'gsap';
 import { STATS, Stat } from '../../core/data/portfolio.data';
 import { RevealDirective } from '../../shared/directives/reveal.directive';
 import { TiltDirective } from '../../shared/directives/tilt.directive';
+import { SpotlightDirective } from '../../shared/directives/spotlight.directive';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-stats',
   standalone: true,
-  imports: [RevealDirective, TiltDirective, IconComponent],
+  imports: [RevealDirective, TiltDirective, SpotlightDirective, IconComponent],
   template: `
     <section id="stats" class="section stats-section">
       <div class="container" appReveal>
         <p class="stats-eyebrow font-mono">&gt; En números</p>
         <div class="stats-grid mt-4">
           @for (s of stats; track s.label; let i = $index) {
-            <article appTilt appReveal [delay]="i * 80" class="stat-card">
+            <article appTilt appSpotlight appReveal [delay]="i * 80" class="stat-card">
               <app-icon class="stat-card__icon" [name]="s.icon" aria-hidden="true" />
               <div class="stat-card__value">
                 {{ format(displayValues()[i], s) }}<span class="stat-card__suffix">{{ s.suffix }}</span>

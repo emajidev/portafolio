@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { ABOUT_CARDS } from '../../core/data/portfolio.data';
 import { RevealDirective } from '../../shared/directives/reveal.directive';
 import { TiltDirective } from '../../shared/directives/tilt.directive';
+import { SpotlightDirective } from '../../shared/directives/spotlight.directive';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [RevealDirective, TiltDirective, IconComponent],
+  imports: [RevealDirective, TiltDirective, SpotlightDirective, IconComponent],
   template: `
     <section id="about" class="section">
       <div class="container" appReveal>
@@ -16,7 +17,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
       </div>
       <div class="container mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         @for (c of cards; track c.title; let i = $index) {
-          <article appTilt appReveal [delay]="i * 50" class="bento-card">
+          <article appTilt appSpotlight appReveal [delay]="i * 50" class="bento-card">
             <app-icon class="bento-card__icon" [name]="c.icon" aria-hidden="true" />
             <h3 class="mt-3 font-display font-semibold text-matrix-neon">{{ c.title }}</h3>
             <p class="mt-2 text-sm text-white/60 leading-relaxed">{{ c.desc }}</p>

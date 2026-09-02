@@ -3,11 +3,12 @@ import { PROJECTS } from '../../core/data/portfolio.data';
 import { Project } from '../../core/models/portfolio.models';
 import { RevealDirective } from '../../shared/directives/reveal.directive';
 import { TiltDirective } from '../../shared/directives/tilt.directive';
+import { SpotlightDirective } from '../../shared/directives/spotlight.directive';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [RevealDirective, TiltDirective],
+  imports: [RevealDirective, TiltDirective, SpotlightDirective],
   template: `
     <section id="projects" class="section">
       <div class="container" appReveal>
@@ -18,6 +19,7 @@ import { TiltDirective } from '../../shared/directives/tilt.directive';
         @for (p of projects; track p.id; let i = $index) {
           <article
             appTilt
+            appSpotlight
             appReveal
             [delay]="i * 60"
             class="project-card interactive"

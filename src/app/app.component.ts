@@ -12,6 +12,8 @@ import { BitMascotComponent } from './features/mascot/bit-mascot.component';
 import { BitGameModalComponent } from './features/mascot/bit-game/bit-game-modal.component';
 import { MascotChatService } from './core/services/mascot-chat.service';
 import { RadioPlayerComponent } from './shared/components/radio-player/radio-player.component';
+import { ScrollTopComponent } from './shared/components/scroll-top/scroll-top.component';
+import { SectionNavComponent } from './layout/section-nav/section-nav.component';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +29,8 @@ import { RadioPlayerComponent } from './shared/components/radio-player/radio-pla
     BitMascotComponent,
     BitGameModalComponent,
     RadioPlayerComponent,
+    ScrollTopComponent,
+    SectionNavComponent,
   ],
   template: `
     @if (loading()) {
@@ -37,11 +41,13 @@ import { RadioPlayerComponent } from './shared/components/radio-player/radio-pla
     <app-custom-cursor />
     <app-scroll-progress />
     <app-header />
+    <app-section-nav />
     <main class="relative z-10">
       <router-outlet />
     </main>
     <app-bit-mascot />
     <app-bit-game-modal />
+    <app-scroll-top />
     <app-radio-player />
     <app-footer-bar />
   `,

@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { AI_EXPERIMENTS } from '../../core/data/portfolio.data';
 import { AiExperiment } from '../../core/models/portfolio.models';
 import { RevealDirective } from '../../shared/directives/reveal.directive';
+import { SpotlightDirective } from '../../shared/directives/spotlight.directive';
 import { AiCoreOrbComponent } from '../../shared/components/ai-core-orb/ai-core-orb.component';
 
 @Component({
   selector: 'app-ai-lab',
   standalone: true,
-  imports: [RevealDirective, FormsModule, AiCoreOrbComponent],
+  imports: [RevealDirective, SpotlightDirective, FormsModule, AiCoreOrbComponent],
   template: `
     <section id="ai-lab" class="section">
       <div class="container flex flex-wrap items-center justify-between gap-4" appReveal>
@@ -42,6 +43,7 @@ import { AiCoreOrbComponent } from '../../shared/components/ai-core-orb/ai-core-
           @for (e of experiments; track e.title; let i = $index) {
             <article
               appReveal
+              appSpotlight
               [delay]="i * 80"
               class="exp-card interactive"
               (click)="open(e)"

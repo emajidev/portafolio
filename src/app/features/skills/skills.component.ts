@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { SKILLS } from '../../core/data/portfolio.data';
 import { RevealDirective } from '../../shared/directives/reveal.directive';
 import { TiltDirective } from '../../shared/directives/tilt.directive';
+import { SpotlightDirective } from '../../shared/directives/spotlight.directive';
 
 @Component({
   selector: 'app-skills',
   standalone: true,
-  imports: [RevealDirective, TiltDirective],
+  imports: [RevealDirective, TiltDirective, SpotlightDirective],
   template: `
     <section id="skills" class="section">
       <div class="container" appReveal>
@@ -15,7 +16,7 @@ import { TiltDirective } from '../../shared/directives/tilt.directive';
       </div>
       <div class="container mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         @for (s of skills; track s.name; let i = $index) {
-          <article appTilt appReveal [delay]="i * 40" class="skill-card">
+          <article appTilt appSpotlight appReveal [delay]="i * 40" class="skill-card">
             <div class="skill-card__orb" aria-hidden="true"></div>
             <svg class="skill-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path [attr.d]="s.icon" />

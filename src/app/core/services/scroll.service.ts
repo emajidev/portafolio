@@ -31,7 +31,7 @@ export class ScrollService {
       this.scrolled.set(y > 30);
       const max = document.documentElement.scrollHeight - window.innerHeight;
       this.progress.set(max > 0 ? (y / max) * 100 : 0);
-      for (const id of ['contact', 'experience', 'ai-lab', 'projects', 'skills', 'about', 'hero']) {
+      for (const id of ['contact', 'experience', 'arcade', 'ai-lab', 'projects', 'skills', 'about', 'stats', 'hero']) {
         const el = document.getElementById(id);
         if (el && el.getBoundingClientRect().top <= 100) {
           this.section.set(id);
