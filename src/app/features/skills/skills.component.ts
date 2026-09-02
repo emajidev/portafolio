@@ -11,13 +11,15 @@ import { TiltDirective } from '../../shared/directives/tilt.directive';
     <section id="skills" class="section">
       <div class="container" appReveal>
         <h2 class="section-title">Stack <span class="neon-text">DevOps & IA</span></h2>
-        <p class="section-subtitle">&gt; Competencias técnicas en producción</p>
+        <p class="section-subtitle">&gt; Competencias técnicas verificadas en producción</p>
       </div>
-      <div class="container mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div class="container mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         @for (s of skills; track s.name; let i = $index) {
           <article appTilt appReveal [delay]="i * 40" class="skill-card">
             <div class="skill-card__orb" aria-hidden="true"></div>
-            <span class="text-2xl">{{ s.icon }}</span>
+            <svg class="skill-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path [attr.d]="s.icon" />
+            </svg>
             <h3 class="mt-2 font-medium">{{ s.name }}</h3>
             <span class="font-mono text-xs text-matrix-neon">{{ s.level }}%</span>
             <div class="skill-bar mt-2">
@@ -34,14 +36,14 @@ import { TiltDirective } from '../../shared/directives/tilt.directive';
       position: relative;
       padding: 1.25rem;
       border-radius: 1rem;
-      border: 1px solid rgb(139 255 77 / 20%);
+      border: 1px solid rgb(0 229 255 / 20%);
       background: rgb(17 17 17 / 50%);
       overflow: hidden;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
     .skill-card:hover {
-      border-color: rgb(139 255 77 / 45%);
-      box-shadow: 0 0 24px rgb(139 255 77 / 15%);
+      border-color: rgb(0 229 255 / 45%);
+      box-shadow: 0 0 24px rgb(0 229 255 / 15%);
     }
     .skill-card__orb {
       position: absolute;
@@ -50,8 +52,14 @@ import { TiltDirective } from '../../shared/directives/tilt.directive';
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background: rgb(139 255 77 / 10%);
+      background: rgb(0 229 255 / 10%);
       filter: blur(20px);
+    }
+    .skill-icon {
+      width: 1.75rem;
+      height: 1.75rem;
+      color: #00e5ff;
+      filter: drop-shadow(0 0 6px rgb(0 229 255 / 45%));
     }
     .skill-bar {
       height: 4px;
@@ -62,8 +70,8 @@ import { TiltDirective } from '../../shared/directives/tilt.directive';
     .skill-bar__fill {
       height: 100%;
       border-radius: 2px;
-      background: linear-gradient(90deg, #00ff88, #8bff4d);
-      box-shadow: 0 0 8px #39ff14;
+      background: linear-gradient(90deg, #7df9ff, #00e5ff);
+      box-shadow: 0 0 8px #22d3ee;
       transition: width 1s ease;
     }
     `,

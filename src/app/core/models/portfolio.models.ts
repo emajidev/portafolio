@@ -1,6 +1,7 @@
 export interface Project {
   id: string;
   title: string;
+  tagline?: string;
   description: string;
   stack: string[];
   challenges: string;
@@ -9,6 +10,9 @@ export interface Project {
   demo?: string;
   tags: string[];
   featured?: boolean;
+  image?: string;
+  imageAlt?: string;
+  accent?: string;
 }
 
 export interface Skill {
@@ -24,4 +28,5 @@ export interface Experience {
   period: string;
   technologies: string[];
   impact: string;
+  bullets?: string[];
 }

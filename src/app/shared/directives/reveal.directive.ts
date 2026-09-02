@@ -1,5 +1,6 @@
 import { Directive, ElementRef, OnDestroy, OnInit, PLATFORM_ID, inject, input } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import gsap from 'gsap';
 
 @Directive({ selector: '[appReveal]', standalone: true })
 export class RevealDirective implements OnInit, OnDestroy {
@@ -11,13 +12,25 @@ export class RevealDirective implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     const el = this.el.nativeElement;
-    el.classList.add('reveal-hidden');
-    el.style.transitionDelay = `${this.delay()}ms`;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reducedMotion) {
+      gsap.set(el, { opacity: 1, clearProps: 'transform' });
+      return;
+    }
+
+    gsap.set(el, { opacity: 0, y: 36, scale: 0.97 });
     this.obs = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) {
-          el.classList.add('reveal-visible');
-          el.classList.remove('reveal-hidden');
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.9,
+            delay: this.delay() / 1000,
+            ease: 'power3.out',
+          });
           this.obs?.unobserve(el);
         }
       },

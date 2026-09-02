@@ -45,13 +45,15 @@ import { ScrollService } from '../../core/services/scroll.service';
     `
     .header {
       position: fixed;
-      inset: 0 0 auto;
+      top: var(--radio-bar-h);
+      left: 0;
+      right: 0;
       z-index: 50;
       border-bottom: 1px solid transparent;
       transition: all 0.3s;
     }
     .header--scrolled {
-      border-color: rgb(139 255 77 / 12%);
+      border-color: rgb(0 229 255 / 12%);
       background: rgb(5 5 5 / 85%);
       backdrop-filter: blur(16px);
     }
@@ -84,10 +86,10 @@ import { ScrollService } from '../../core/services/scroll.service';
       background: none;
       border: none;
     }
-    .nav-link:hover, .nav-link--active { color: #8bff4d; }
+    .nav-link:hover, .nav-link--active { color: #00e5ff; }
     .menu-btn {
       font-family: monospace;
-      color: #8bff4d;
+      color: #00e5ff;
       background: none;
       border: none;
     }

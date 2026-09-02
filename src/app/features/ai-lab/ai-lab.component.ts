@@ -3,16 +3,22 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AI_EXPERIMENTS } from '../../core/data/portfolio.data';
 import { RevealDirective } from '../../shared/directives/reveal.directive';
+import { AiCoreOrbComponent } from '../../shared/components/ai-core-orb/ai-core-orb.component';
 
 @Component({
   selector: 'app-ai-lab',
   standalone: true,
-  imports: [RevealDirective, FormsModule],
+  imports: [RevealDirective, FormsModule, AiCoreOrbComponent],
   template: `
     <section id="ai-lab" class="section">
-      <div class="container" appReveal>
-        <h2 class="section-title">AI <span class="neon-text">Lab</span></h2>
-        <p class="section-subtitle">&gt; Experimentos y automatizaciones en vivo</p>
+      <div class="container flex flex-wrap items-center justify-between gap-4" appReveal>
+        <div>
+          <h2 class="section-title">AI <span class="neon-text">Lab</span></h2>
+          <p class="section-subtitle">&gt; Experimentos y automatizaciones en vivo</p>
+        </div>
+        <div class="ai-core" title="Núcleo de IA — pasa el mouse">
+          <app-ai-core-orb />
+        </div>
       </div>
       <div class="container mt-10 grid gap-6 lg:grid-cols-2">
         <div appReveal class="terminal">
@@ -47,9 +53,14 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
   `,
   styles: [
     `
+    .ai-core {
+      width: 5.5rem;
+      height: 5.5rem;
+      flex-shrink: 0;
+    }
     .terminal {
       border-radius: 1rem;
-      border: 1px solid rgb(139 255 77 / 25%);
+      border: 1px solid rgb(0 229 255 / 25%);
       overflow: hidden;
       background: rgb(5 5 5 / 90%);
     }
@@ -59,7 +70,7 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       gap: 0.4rem;
       padding: 0.6rem 1rem;
       background: rgb(17 17 17);
-      border-bottom: 1px solid rgb(139 255 77 / 15%);
+      border-bottom: 1px solid rgb(0 229 255 / 15%);
     }
     .dot { width: 10px; height: 10px; border-radius: 50%; }
     .red { background: #ff5f57; }
@@ -77,7 +88,7 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       padding: 1rem;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.8rem;
-      color: #00ff88;
+      color: #7df9ff;
       line-height: 1.6;
     }
     .terminal-cursor { animation: blink 1s step-end infinite; }
@@ -85,7 +96,7 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       display: flex;
       gap: 0.5rem;
       padding: 0.75rem 1rem;
-      border-top: 1px solid rgb(139 255 77 / 15%);
+      border-top: 1px solid rgb(0 229 255 / 15%);
     }
     .terminal-input input {
       flex: 1;
@@ -99,18 +110,18 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
     .exp-card {
       padding: 1rem;
       border-radius: 0.75rem;
-      border: 1px solid rgb(139 255 77 / 18%);
+      border: 1px solid rgb(0 229 255 / 18%);
       background: rgb(17 17 17 / 50%);
       transition: border-color 0.3s;
     }
-    .exp-card:hover { border-color: rgb(139 255 77 / 40%); }
+    .exp-card:hover { border-color: rgb(0 229 255 / 40%); }
     .exp-badge {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.6rem;
       padding: 0.1rem 0.4rem;
       border-radius: 999px;
-      background: rgb(139 255 77 / 15%);
-      color: #8bff4d;
+      background: rgb(0 229 255 / 15%);
+      color: #00e5ff;
     }
     .exp-badge--beta {
       background: rgb(254 188 46 / 15%);

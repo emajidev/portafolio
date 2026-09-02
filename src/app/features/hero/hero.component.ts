@@ -1,20 +1,22 @@
-import { Component, OnInit, PLATFORM_ID, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, PLATFORM_ID, ViewChild, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ScrollService } from '../../core/services/scroll.service';
-import { ClawdComponent } from '../mascot/clawd.component';
 import { RevealDirective } from '../../shared/directives/reveal.directive';
+import { ThreeHeroBgComponent } from '../../shared/components/three-hero-bg/three-hero-bg.component';
+import { TextScramble } from '../../shared/utils/text-scramble';
+import { MagneticDirective } from '../../shared/directives/magnetic.directive';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [ClawdComponent, RevealDirective],
+  imports: [RevealDirective, ThreeHeroBgComponent, MagneticDirective],
   template: `
     <section id="hero" class="hero">
       <div class="hero-grid" aria-hidden="true"></div>
       <div class="hero-inner">
         <div appReveal>
           <p class="hero-tag font-mono text-sm text-matrix-terminal">
-            <span class="text-matrix-neon">&gt;</span> {{ role() }}<span class="cursor-blink">_</span>
+            <span class="text-matrix-neon">&gt;</span> <span #roleText>{{ role() }}</span><span class="cursor-blink">_</span>
           </p>
           <h1 class="hero-name">Emanuel <span class="neon-text">J.M</span></h1>
           <h2 class="hero-headline">
@@ -22,21 +24,25 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
             <span class="neon-text">DevOps</span> Inteligente
           </h2>
           <p class="hero-desc">
-            Ingeniero backend especializado en IA, automatización, DevOps y arquitecturas escalables.
-            Creo soluciones que combinan Machine Learning e infraestructura cloud.
+            7 años de experiencia diseñando sistemas escalables, APIs de alto rendimiento y
+            arquitecturas cloud-native en AWS. Lidero modernización DevSecOps en plataformas
+            fintech críticas e integro agentes de IA propios en el ciclo de desarrollo.
           </p>
           <div class="hero-cta">
-            <button type="button" class="interactive btn-primary" (click)="go('projects')">
-              ◎ Ver Proyectos de IA →
+            <button type="button" appMagnetic class="interactive btn-primary" (click)="go('projects')">
+              ◎ Ver Proyectos →
             </button>
-            <button type="button" class="interactive btn-secondary" (click)="go('skills')">
-              ∞ Enfoque DevOps
+            <a href="cv-emanuel-jimenez.pdf" target="_blank" rel="noopener" appMagnetic class="interactive btn-secondary" download>
+              ⬇ Descargar CV
+            </a>
+            <button type="button" appMagnetic class="interactive btn-secondary" (click)="go('contact')">
+              ✉ Contactar
             </button>
           </div>
         </div>
 
         <div class="hero-visual" appReveal [delay]="150">
-          <app-clawd variant="hero" />
+          <app-three-hero-bg class="hero-visual__bg" />
         </div>
       </div>
     </section>
@@ -48,15 +54,15 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       min-height: 100vh;
       display: flex;
       align-items: center;
-      padding: 6rem 1.5rem 4rem;
+      padding: calc(6rem + var(--radio-bar-h)) 1.5rem 4rem;
       overflow: hidden;
     }
     .hero-grid {
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgb(139 255 77 / 3%) 1px, transparent 1px),
-        linear-gradient(90deg, rgb(139 255 77 / 3%) 1px, transparent 1px);
+        linear-gradient(rgb(0 229 255 / 3%) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(0 229 255 / 3%) 1px, transparent 1px);
       background-size: 48px 48px;
       mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black, transparent);
     }
@@ -99,6 +105,7 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       margin-top: 2rem;
     }
     .hero-visual {
+      position: relative;
       display: flex;
       align-items: flex-end;
       justify-content: flex-end;
@@ -106,21 +113,47 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       padding: 1rem;
       overflow: visible;
     }
+    .hero-visual__bg {
+      position: absolute;
+      inset: -35% -15%;
+      z-index: 0;
+      pointer-events: auto;
+      opacity: 0.85;
+      mask-image: radial-gradient(closest-side, black 55%, transparent 100%);
+    }
     .cursor-blink { animation: blink 1s step-end infinite; }
     @keyframes blink { 50% { opacity: 0; } }
     `,
   ],
 })
-export class HeroComponent implements OnInit {
-  readonly role = signal('Backend Engineer');
+export class HeroComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('roleText') private readonly roleTextRef?: ElementRef<HTMLElement>;
+  readonly role = signal('Fullstack Developer');
   private readonly scroll = inject(ScrollService);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly roles = ['Fullstack Developer', 'DevOps & DevSecOps Engineer', 'AI Agents Engineer'];
+  private roleIndex = 0;
+  private scrambler?: TextScramble;
+  private roleInterval?: ReturnType<typeof setInterval>;
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    const roles = ['Backend Engineer', 'IA & DevOps Specialist', 'Cloud Architect'];
-    let i = 0;
-    setInterval(() => this.role.set(roles[i++ % roles.length]), 2800);
+    this.roleInterval = setInterval(() => {
+      this.roleIndex = (this.roleIndex + 1) % this.roles.length;
+      const next = this.roles[this.roleIndex];
+      if (this.scrambler) this.scrambler.setText(next);
+      else this.role.set(next);
+    }, 3200);
+  }
+
+  ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId) || !this.roleTextRef) return;
+    this.scrambler = new TextScramble(this.roleTextRef.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.roleInterval);
+    this.scrambler?.destroy();
   }
 
   go(id: string): void {

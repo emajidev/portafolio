@@ -22,14 +22,14 @@ import { Component, OnInit, output, signal } from '@angular/core';
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #050505;
+      background: #03050a;
       gap: 1rem;
     }
     .preloader-title {
       font-family: 'JetBrains Mono', monospace;
       font-size: 1.25rem;
-      color: #8bff4d;
-      text-shadow: 0 0 20px #39ff14;
+      color: #00e5ff;
+      text-shadow: 0 0 20px #22d3ee;
     }
     .preloader-sub {
       font-family: 'JetBrains Mono', monospace;
@@ -45,7 +45,7 @@ import { Component, OnInit, output, signal } from '@angular/core';
     }
     .preloader-fill {
       height: 100%;
-      background: linear-gradient(90deg, #39ff14, #8bff4d);
+      background: linear-gradient(90deg, #22d3ee, #00e5ff);
       transition: width 0.3s ease;
     }
     `,
@@ -59,7 +59,7 @@ export class PreloaderComponent implements OnInit {
 
   ngOnInit(): void {
     const steps = [
-      { p: 25, t: 'Cargando Matrix...' },
+      { p: 25, t: 'Conectando al Grid...' },
       { p: 55, t: 'Activando Davi...' },
       { p: 85, t: 'Sync DevOps stack...' },
       { p: 100, t: 'Listo.' },

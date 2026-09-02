@@ -21,7 +21,18 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
               <p class="font-mono text-xs text-matrix-terminal">{{ e.period }}</p>
               <h3 class="mt-2 font-semibold text-matrix-neon leading-snug">{{ e.role }}</h3>
               <p class="font-medium text-white/90">{{ e.company }}</p>
-              <p class="mt-2 text-sm text-white/55 leading-relaxed">{{ e.impact }}</p>
+              @if (e.bullets?.length) {
+                <ul class="mt-2 flex flex-col gap-1.5">
+                  @for (b of e.bullets; track b) {
+                    <li class="flex gap-1.5 text-sm text-white/55 leading-relaxed">
+                      <span class="text-matrix-neon" aria-hidden="true">▹</span>
+                      <span>{{ b }}</span>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <p class="mt-2 text-sm text-white/55 leading-relaxed">{{ e.impact }}</p>
+              }
               <div class="mt-4 flex flex-wrap gap-1.5">
                 @for (t of e.technologies; track t) {
                   <span class="chip">{{ t }}</span>
@@ -60,32 +71,32 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: thin;
-      scrollbar-color: rgb(139 255 77 / 30%) transparent;
+      scrollbar-color: rgb(0 229 255 / 30%) transparent;
     }
 
     .timeline-scroll::-webkit-scrollbar {
       height: 4px;
     }
     .timeline-scroll::-webkit-scrollbar-thumb {
-      background: rgb(139 255 77 / 35%);
+      background: rgb(0 229 255 / 35%);
       border-radius: 2px;
     }
 
     .timeline-card {
       position: relative;
-      flex: 0 0 min(18rem, 85vw);
+      flex: 0 0 min(21rem, 88vw);
       scroll-snap-align: start;
       padding: 1.5rem 1.5rem 1.75rem;
       margin-top: 0.5rem;
       border-radius: 1rem;
-      border: 1px solid rgb(139 255 77 / 20%);
+      border: 1px solid rgb(0 229 255 / 20%);
       background: rgb(17 17 17 / 70%);
       transition: border-color 0.3s, box-shadow 0.3s;
     }
 
     .timeline-card:hover {
-      border-color: rgb(139 255 77 / 45%);
-      box-shadow: 0 0 24px rgb(139 255 77 / 12%);
+      border-color: rgb(0 229 255 / 45%);
+      box-shadow: 0 0 24px rgb(0 229 255 / 12%);
     }
 
     .timeline-dot {
@@ -95,8 +106,8 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #8bff4d;
-      box-shadow: 0 0 10px #39ff14;
+      background: #00e5ff;
+      box-shadow: 0 0 10px #22d3ee;
       z-index: 2;
     }
 
@@ -105,8 +116,8 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       font-size: 0.65rem;
       padding: 0.2rem 0.5rem;
       border-radius: 999px;
-      background: rgb(139 255 77 / 10%);
-      color: #8bff4d;
+      background: rgb(0 229 255 / 10%);
+      color: #00e5ff;
       white-space: nowrap;
     }
 
@@ -124,11 +135,11 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       background: linear-gradient(
         90deg,
         transparent 0%,
-        rgb(139 255 77 / 50%) 15%,
-        rgb(139 255 77 / 50%) 85%,
+        rgb(0 229 255 / 50%) 15%,
+        rgb(0 229 255 / 50%) 85%,
         transparent 100%
       );
-      box-shadow: 0 0 8px rgb(139 255 77 / 20%);
+      box-shadow: 0 0 8px rgb(0 229 255 / 20%);
     }
 
     @media (min-width: 768px) {

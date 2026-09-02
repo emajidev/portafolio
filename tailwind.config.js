@@ -6,12 +6,14 @@ module.exports = {
     extend: {
       colors: {
         matrix: {
-          bg: '#050505',
-          neon: '#8BFF4D',
-          terminal: '#00FF88',
-          glow: '#39FF14',
-          dark: '#111111',
+          bg: '#03050a',
+          neon: '#00E5FF',
+          terminal: '#7DF9FF',
+          glow: '#22D3EE',
+          dark: '#0a0e16',
           soft: '#EDEDED',
+          yes: '#FFD500',
+          no: '#FF3B3B',
         },
       },
       fontFamily: {

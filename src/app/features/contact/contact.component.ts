@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RevealDirective } from '../../shared/directives/reveal.directive';
+import { MagneticDirective } from '../../shared/directives/magnetic.directive';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [ReactiveFormsModule, RevealDirective],
+  imports: [ReactiveFormsModule, RevealDirective, MagneticDirective],
   template: `
     <section id="contact" class="section pb-36">
       <div class="container grid gap-10 lg:grid-cols-2 items-start">
@@ -14,7 +15,7 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
           <p class="section-subtitle mt-3">Disponible para proyectos IA, consultoría DevOps y colaboraciones.</p>
           <div class="mt-8 flex flex-wrap gap-3">
             @for (s of socials; track s.label) {
-              <a [href]="s.url" target="_blank" rel="noopener" class="social-link interactive">{{ s.label }}</a>
+              <a [href]="s.url" target="_blank" rel="noopener" appMagnetic [strength]="0.5" class="social-link interactive">{{ s.label }}</a>
             }
           </div>
         </div>
@@ -28,7 +29,7 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
             <label class="field"><span>nombre</span><input formControlName="name" /></label>
             <label class="field"><span>email</span><input formControlName="email" type="email" /></label>
             <label class="field"><span>mensaje</span><textarea formControlName="message" rows="4"></textarea></label>
-            <button type="submit" class="interactive btn-primary w-full" [disabled]="form.invalid">Enviar mensaje →</button>
+            <button type="submit" appMagnetic [strength]="0.15" class="interactive btn-primary w-full" [disabled]="form.invalid">Enviar mensaje →</button>
           }
         </form>
       </div>
@@ -42,7 +43,7 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
     .contact-form {
       padding: 1.5rem;
       border-radius: 1rem;
-      border: 1px solid rgb(139 255 77 / 25%);
+      border: 1px solid rgb(0 229 255 / 25%);
       background: rgb(17 17 17 / 70%);
       backdrop-filter: blur(16px);
       display: flex;
@@ -53,7 +54,7 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       display: block;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.7rem;
-      color: #8bff4d;
+      color: #00e5ff;
       margin-bottom: 0.35rem;
     }
     .field input, .field textarea {
@@ -69,21 +70,21 @@ import { RevealDirective } from '../../shared/directives/reveal.directive';
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     .field input:focus, .field textarea:focus {
-      border-color: rgb(139 255 77 / 50%);
-      box-shadow: 0 0 12px rgb(139 255 77 / 15%);
+      border-color: rgb(0 229 255 / 50%);
+      box-shadow: 0 0 12px rgb(0 229 255 / 15%);
     }
     .social-link {
       padding: 0.5rem 1rem;
       border-radius: 0.5rem;
-      border: 1px solid rgb(139 255 77 / 20%);
+      border: 1px solid rgb(0 229 255 / 20%);
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.8rem;
       color: rgb(237 237 237 / 70%);
       transition: all 0.25s;
     }
     .social-link:hover {
-      border-color: rgb(139 255 77 / 45%);
-      color: #8bff4d;
+      border-color: rgb(0 229 255 / 45%);
+      color: #00e5ff;
     }
     .sent-state {
       text-align: center;
@@ -97,8 +98,9 @@ export class ContactComponent {
   readonly sent = signal(false);
   readonly socials = [
     { label: 'GitHub', url: 'https://github.com/emajidev' },
-    { label: 'LinkedIn', url: 'https://linkedin.com' },
-    { label: 'Email', url: 'mailto:contacto@emanueljm.dev' },
+    { label: 'LinkedIn', url: 'https://linkedin.com/in/emajidev' },
+    { label: 'WhatsApp', url: 'https://wa.me/584140220846' },
+    { label: 'Email', url: 'mailto:emanuelyul@gmail.com' },
   ];
   private readonly fb = inject(FormBuilder);
   readonly form = this.fb.nonNullable.group({
@@ -110,7 +112,7 @@ export class ContactComponent {
   send(): void {
     if (this.form.invalid) return;
     const { name, email, message } = this.form.getRawValue();
-    window.open(`mailto:contacto@emanueljm.dev?subject=Portfolio&body=${encodeURIComponent(`${name} (${email})\n\n${message}`)}`);
+    window.open(`mailto:emanuelyul@gmail.com?subject=Portfolio&body=${encodeURIComponent(`${name} (${email})\n\n${message}`)}`);
     this.sent.set(true);
     setTimeout(() => {
       this.sent.set(false);

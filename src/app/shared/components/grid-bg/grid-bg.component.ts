@@ -10,22 +10,22 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
-  selector: 'app-matrix-bg',
+  selector: 'app-grid-bg',
   standalone: true,
-  template: `<canvas #c class="matrix-canvas" aria-hidden="true"></canvas>`,
+  template: `<canvas #c class="grid-canvas" aria-hidden="true"></canvas>`,
   styles: [
     `
-    .matrix-canvas {
+    .grid-canvas {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      opacity: 0.22;
+      opacity: 0.4;
     }
     `,
   ],
 })
-export class MatrixBgComponent implements AfterViewInit, OnDestroy {
+export class GridBgComponent implements AfterViewInit, OnDestroy {
   @ViewChild('c') canvasRef!: ElementRef<HTMLCanvasElement>;
   private readonly platformId = inject(PLATFORM_ID);
   private raf = 0;
@@ -37,32 +37,64 @@ export class MatrixBgComponent implements AfterViewInit, OnDestroy {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const chars = 'アイウエオカキクケコ0123456789ABCDEF';
-    const size = 15;
-    let cols = 0;
-    let drops: number[] = [];
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let width = 0;
+    let height = 0;
+    let horizonY = 0;
 
     const resize = (): void => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      cols = Math.floor(canvas.width / size);
-      drops = Array(cols).fill(0).map(() => Math.random() * -40);
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      horizonY = height * 0.4;
     };
     resize();
     this.onResize = resize;
     window.addEventListener('resize', resize);
 
+    const rows = 26;
+    const cols = 22;
+    let progress = 0;
+
     const draw = (): void => {
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.07)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.font = `${size}px "JetBrains Mono", monospace`;
-      for (let i = 0; i < cols; i++) {
-        const ch = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillStyle = i % 5 === 0 ? '#b8ff9a' : '#4ade80';
-        ctx.fillText(ch, i * size, drops[i] * size);
-        if (drops[i] * size > canvas.height && Math.random() > 0.98) drops[i] = 0;
-        drops[i]++;
+      ctx.fillStyle = '#03050a';
+      ctx.fillRect(0, 0, width, height);
+
+      const glow = ctx.createRadialGradient(width / 2, horizonY, 0, width / 2, horizonY, width * 0.5);
+      glow.addColorStop(0, 'rgba(0, 229, 255, 0.16)');
+      glow.addColorStop(1, 'rgba(0, 229, 255, 0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.strokeStyle = 'rgba(0, 229, 255, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, horizonY);
+      ctx.lineTo(width, horizonY);
+      ctx.stroke();
+
+      const vpX = width / 2;
+      for (let i = 0; i <= cols; i++) {
+        const bx = (i / cols - 0.5) * width * 2.4;
+        const t = Math.abs(i / cols - 0.5) * 2;
+        ctx.strokeStyle = `rgba(0, 229, 255, ${0.16 - t * 0.08})`;
+        ctx.beginPath();
+        ctx.moveTo(vpX, horizonY);
+        ctx.lineTo(vpX + bx, height);
+        ctx.stroke();
       }
+
+      for (let i = 0; i < rows; i++) {
+        const t = ((i + progress) % rows) / rows;
+        const y = horizonY + Math.pow(t, 2.6) * (height - horizonY);
+        ctx.strokeStyle = `rgba(0, 229, 255, ${0.5 - t * 0.46})`;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      if (reducedMotion) return;
+      progress += 0.0065 * rows;
       this.raf = requestAnimationFrame(draw);
     };
     draw();
