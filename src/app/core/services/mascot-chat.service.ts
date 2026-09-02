@@ -1,6 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { EXPERIENCES, MASCOT_ANNOYED_MSGS, MASCOT_IDLE_MSGS, MASCOT_LAUGH_MSGS, MASCOT_MSGS, PROJECTS, SKILLS } from '../data/portfolio.data';
+import { BitGameService } from './bit-game.service';
 
 export type Sentiment = 'yes' | 'no' | 'neutral';
 
@@ -10,6 +11,17 @@ export interface MascotDialog {
   exiting: boolean;
   sentiment: Sentiment;
 }
+
+export interface PlayInvite {
+  id: number;
+  exiting: boolean;
+}
+
+const PLAY_DECLINE_MSGS = [
+  'Vale, aquí estaré si cambias de opinión.',
+  'Sin problema, sigo flotando por aquí.',
+  '¡Está bien! Otro día jugamos.',
+];
 
 const GREETINGS = [
   '¡Hola! Soy Davi. ¿En qué te ayudo?',
@@ -59,13 +71,18 @@ export interface UserPromptBubble {
 
 @Injectable({ providedIn: 'root' })
 export class MascotChatService {
+  private readonly bitGame = inject(BitGameService);
+
   readonly dialogs = signal<MascotDialog[]>([]);
   /** Mensaje que el usuario acaba de enviar (visible arriba del footer). */
   readonly userPrompt = signal<UserPromptBubble | null>(null);
   readonly userMessageSent = new Subject<void>();
+  /** Invitación de Bit a jugar, con botones Sí/No en la burbuja. */
+  readonly playInvite = signal<PlayInvite | null>(null);
 
   private userName?: string;
   private nextId = 0;
+  private nextInviteId = 0;
   private userPromptTimer?: ReturnType<typeof setTimeout>;
   private userPromptRemoveTimer?: ReturnType<typeof setTimeout>;
   private readonly dismissTimers = new Map<number, ReturnType<typeof setTimeout>>();
@@ -75,6 +92,10 @@ export class MascotChatService {
   private idleTimer?: ReturnType<typeof setTimeout>;
   private idleChatterStarted = false;
   private static readonly IDLE_MIN_GAP_MS = 16000;
+
+  private inviteTimer?: ReturnType<typeof setTimeout>;
+  private inviteChatterStarted = false;
+  private inviteRemoveTimer?: ReturnType<typeof setTimeout>;
 
   private static readonly USER_PROMPT_VISIBLE_MS = 5500;
 
@@ -116,6 +137,50 @@ export class MascotChatService {
   stopIdleChatter(): void {
     clearTimeout(this.idleTimer);
     this.idleChatterStarted = false;
+  }
+
+  /** De vez en cuando, si nadie está jugando ni charlando, Bit invita a jugar. */
+  startPlayInvites(): void {
+    if (this.inviteChatterStarted) return;
+    this.inviteChatterStarted = true;
+
+    const scheduleNext = (): void => {
+      const wait = 42000 + Math.random() * 33000;
+      this.inviteTimer = setTimeout(() => {
+        const idleEnough = Date.now() - this.lastSpokeAt >= 5000;
+        if (!this.bitGame.isOpen() && !this.playInvite() && idleEnough) {
+          this.pushPlayInvite();
+        }
+        scheduleNext();
+      }, wait);
+    };
+    scheduleNext();
+  }
+
+  stopPlayInvites(): void {
+    clearTimeout(this.inviteTimer);
+    this.inviteChatterStarted = false;
+  }
+
+  private pushPlayInvite(): void {
+    this.lastSpokeAt = Date.now();
+    const id = ++this.nextInviteId;
+    this.playInvite.set({ id, exiting: false });
+  }
+
+  answerPlayInvite(accepted: boolean): void {
+    const current = this.playInvite();
+    if (!current) return;
+
+    clearTimeout(this.inviteRemoveTimer);
+    this.playInvite.set({ ...current, exiting: true });
+    this.inviteRemoveTimer = setTimeout(() => this.playInvite.set(null), 320);
+
+    if (accepted) {
+      this.bitGame.open();
+    } else {
+      this.push(this.pick(PLAY_DECLINE_MSGS), 'no');
+    }
   }
 
   private showUserPrompt(text: string): void {

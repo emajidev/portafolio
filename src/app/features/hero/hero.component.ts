@@ -20,13 +20,14 @@ import { MagneticDirective } from '../../shared/directives/magnetic.directive';
           </p>
           <h1 class="hero-name">Emanuel <span class="neon-text">J.M</span></h1>
           <h2 class="hero-headline">
-            Impulsando el <span class="neon-text">Futuro con IA</span> y
-            <span class="neon-text">DevOps</span> Inteligente
+            <span class="neon-text">Fullstack</span>,
+            <span class="neon-text">DevOps</span> e
+            <span class="neon-text">Ingeniería de IA</span>
           </h2>
           <p class="hero-desc">
-            7 años de experiencia diseñando sistemas escalables, APIs de alto rendimiento y
-            arquitecturas cloud-native en AWS. Lidero modernización DevSecOps en plataformas
-            fintech críticas e integro agentes de IA propios en el ciclo de desarrollo.
+            7 años de experiencia diseñando sistemas escalables de punta a punta: APIs de alto
+            rendimiento, frontends modernos, infraestructura cloud-native en AWS y agentes de IA
+            propios integrados en producción. Del código al despliegue, sin fricción.
           </p>
           <div class="hero-cta">
             <button type="button" appMagnetic class="interactive btn-primary" (click)="go('projects')">

@@ -9,6 +9,7 @@ import { FooterBarComponent } from './layout/footer-bar/footer-bar.component';
 import { ScrollService } from './core/services/scroll.service';
 import { CustomCursorComponent } from './shared/components/custom-cursor/custom-cursor.component';
 import { BitMascotComponent } from './features/mascot/bit-mascot.component';
+import { BitGameModalComponent } from './features/mascot/bit-game/bit-game-modal.component';
 import { MascotChatService } from './core/services/mascot-chat.service';
 import { RadioPlayerComponent } from './shared/components/radio-player/radio-player.component';
 
@@ -24,6 +25,7 @@ import { RadioPlayerComponent } from './shared/components/radio-player/radio-pla
     FooterBarComponent,
     CustomCursorComponent,
     BitMascotComponent,
+    BitGameModalComponent,
     RadioPlayerComponent,
   ],
   template: `
@@ -39,6 +41,7 @@ import { RadioPlayerComponent } from './shared/components/radio-player/radio-pla
       <router-outlet />
     </main>
     <app-bit-mascot />
+    <app-bit-game-modal />
     <app-radio-player />
     <app-footer-bar />
   `,
@@ -70,5 +73,6 @@ export class AppComponent implements OnInit {
     this.scroll.init();
     setTimeout(() => this.mascotChat.greet(), 2200);
     this.mascotChat.startIdleChatter();
+    this.mascotChat.startPlayInvites();
   }
 }

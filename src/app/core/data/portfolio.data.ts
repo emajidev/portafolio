@@ -1,10 +1,11 @@
-import { Experience, Project, Skill } from '../models/portfolio.models';
+import { AiExperiment, Experience, Project, Skill } from '../models/portfolio.models';
 import { IconName } from '../../shared/components/icon/icon.component';
 
 export const NAV = [
-  { label: 'Proyectos IA', id: 'projects' },
-  { label: 'DevOps', id: 'skills' },
+  { label: 'Proyectos', id: 'projects' },
+  { label: 'Stack', id: 'skills' },
   { label: 'Lab IA', id: 'ai-lab' },
+  { label: 'Arcade', id: 'arcade' },
   { label: 'Experiencia', id: 'experience' },
   { label: 'Contacto', id: 'contact' },
 ];
@@ -223,11 +224,39 @@ export const EXPERIENCES: Experience[] = [
   },
 ];
 
-export const AI_EXPERIMENTS = [
-  { title: 'Agente Anti-Fraude (WAF)', status: 'active', log: '[SEC] ~180 intentos de fraude bloqueados/mes' },
-  { title: 'IT Support Agent (RAG)', status: 'active', log: '[OK] OpenClaw + Hermes Agent conectados' },
-  { title: 'Postmortem Generator', status: 'active', log: '[ML] Documentación de incidentes: 4h → 30min' },
-  { title: 'Asistente RAG (pgvector)', status: 'beta', log: '[AI] LangGraph + LangChain sobre contratos' },
+export const AI_EXPERIMENTS: AiExperiment[] = [
+  {
+    title: 'Agente Anti-Fraude (WAF)',
+    status: 'active',
+    log: '[SEC] ~180 intentos de fraude bloqueados/mes',
+    detail: 'Agente propio que analiza patrones de tráfico sospechoso en tiempo real y los correlaciona con reglas de WAF en Cloudflare, bloqueando intentos de fraude antes de que lleguen a la aplicación. Reduce los hallazgos críticos de seguridad de 12 a 4 por trimestre.',
+    stack: ['Python', 'Cloudflare WAF', 'AWS', 'Kubernetes'],
+    impact: '~180 intentos de fraude bloqueados/mes · hallazgos críticos: 12 → 4 por trimestre',
+  },
+  {
+    title: 'IT Support Agent (RAG)',
+    status: 'active',
+    log: '[OK] OpenClaw + Hermes Agent conectados',
+    detail: 'Dos agentes de IT (OpenClaw y Hermes Agent) construidos con LLM + RAG que automatizan soporte interno: responden tickets, buscan en documentación técnica y ejecutan tareas rutinarias sin intervención humana.',
+    stack: ['LangChain', 'RAG', 'OpenAI', 'NestJS'],
+    impact: 'Automatiza la resolución de tickets de soporte IT de primer nivel',
+  },
+  {
+    title: 'Postmortem Generator',
+    status: 'active',
+    log: '[ML] Documentación de incidentes: 4h → 30min',
+    detail: 'Herramienta de monitoreo con IA que correlaciona logs, métricas y alertas de un incidente para generar automáticamente un postmortem estructurado (causa raíz, línea de tiempo, acciones correctivas), listo para revisión humana.',
+    stack: ['Python', 'AWS CloudWatch', 'OpenAI'],
+    impact: 'Tiempo de documentación de incidentes: 4 horas → 30 minutos',
+  },
+  {
+    title: 'Asistente RAG (pgvector)',
+    status: 'beta',
+    log: '[AI] LangGraph + LangChain sobre contratos',
+    detail: 'Asistente virtual con RAG sobre pgvector que responde preguntas en lenguaje natural usando el contexto de contratos agrícolas trazables, orquestado con LangGraph/LangChain para razonamiento multi-paso.',
+    stack: ['LangGraph', 'LangChain', 'pgvector', 'PostgreSQL'],
+    impact: 'Consultas en lenguaje natural sobre contratos, sin buscar manualmente en documentos',
+  },
 ];
 
 export const MASCOT_MSGS = [
@@ -265,6 +294,21 @@ export const MASCOT_IDLE_MSGS = [
   '¿Buscas trabajo para Emanuel? El botón Contactar → te lleva directo.',
   'Sigo flotando por aquí si necesitas algo.',
   'Pregúntame por una tecnología, ej: "sabes Kubernetes?"',
+];
+
+export interface Stat {
+  icon: IconName;
+  value: number;
+  decimals?: number;
+  suffix: string;
+  label: string;
+}
+
+export const STATS: Stat[] = [
+  { icon: 'zap', value: 7, suffix: '+', label: 'Años de experiencia' },
+  { icon: 'gem', value: PROJECTS.length, suffix: '+', label: 'Proyectos reales en producción' },
+  { icon: 'target', value: 99.9, decimals: 1, suffix: '%', label: 'Disponibilidad en plataformas críticas' },
+  { icon: 'bot', value: AI_EXPERIMENTS.length, suffix: '+', label: 'Agentes de IA activos' },
 ];
 
 export const ABOUT_CARDS: { icon: IconName; title: string; desc: string }[] = [

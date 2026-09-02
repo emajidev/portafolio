@@ -83,6 +83,38 @@ class BitSoundEngine {
     this.blip(520, 0.07, 'square', 4, 0.035);
   }
 
+  playHit(): void {
+    this.blip(880, 0.05, 'square', 5, 0.045);
+  }
+
+  playScore(): void {
+    this.blip(660, 0.08, 'square', 6, 0.05);
+    setTimeout(() => this.blip(990, 0.1, 'square', 6, 0.05), 60);
+  }
+
+  playCountdownTick(): void {
+    this.blip(440, 0.09, 'square', 3, 0.04);
+  }
+
+  playWin(): void {
+    if (this.mutedState) return;
+    [660, 880, 1100, 1320].forEach((f, i) => setTimeout(() => this.blip(f, 0.16, 'square', 5, 0.055), i * 100));
+  }
+
+  playLose(): void {
+    if (this.mutedState) return;
+    [420, 320, 220, 140].forEach((f, i) => setTimeout(() => this.blip(f, 0.22, 'sawtooth', 24, 0.05), i * 120));
+  }
+
+  /** Estallido de "derez" tipo Tron: zap agudo + rumble grave descendente. */
+  playCrash(): void {
+    if (this.mutedState) return;
+    this.blip(1500, 0.07, 'square', 10, 0.055);
+    this.blip(140, 0.32, 'sawtooth', 30, 0.07);
+    setTimeout(() => this.blip(90, 0.4, 'sawtooth', 34, 0.06), 50);
+    setTimeout(() => this.blip(700, 0.05, 'square', 8, 0.04), 90);
+  }
+
   playYesChirp(): void {
     if (this.mutedState) return;
     const ctx = this.ensureContext();

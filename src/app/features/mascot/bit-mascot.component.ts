@@ -52,11 +52,22 @@ function buildSpikyGeometry(T: ThreeModule): THREE.BufferGeometry {
         (keydown.enter)="onActivate()"
         (keydown.space)="onActivate()"
       ></canvas>
-      @if (latestDialog(); as d) {
-        <div class="bit-bubble" [class.bit-bubble--exit]="d.exiting" role="status" aria-live="polite">
+      @if (invite(); as inv) {
+        <div class="bit-bubble bit-bubble--invite" [class.bit-bubble--exit]="inv.exiting" role="status" aria-live="polite">
           <span class="bit-bubble__tag">DAVI://</span>
-          <p>{{ d.text }}</p>
+          <p>¿Quieres jugar conmigo?</p>
+          <div class="bit-bubble__actions">
+            <button type="button" class="bit-btn bit-btn--yes interactive" (click)="respondInvite(true)">SÍ</button>
+            <button type="button" class="bit-btn bit-btn--no interactive" (click)="respondInvite(false)">NO</button>
+          </div>
         </div>
+      } @else {
+        @if (latestDialog(); as d) {
+          <div class="bit-bubble" [class.bit-bubble--exit]="d.exiting" role="status" aria-live="polite">
+            <span class="bit-bubble__tag">DAVI://</span>
+            <p>{{ d.text }}</p>
+          </div>
+        }
       }
     </div>
   `,
@@ -119,6 +130,34 @@ function buildSpikyGeometry(T: ThreeModule): THREE.BufferGeometry {
       color: #00e5ff;
       opacity: 0.7;
     }
+    .bit-bubble--invite {
+      pointer-events: auto;
+      min-width: 11rem;
+    }
+    .bit-bubble__actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      pointer-events: auto;
+    }
+    .bit-btn {
+      flex: 1;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.3rem 0;
+      border-radius: 999px;
+      pointer-events: auto;
+    }
+    .bit-btn--yes {
+      background: #ffd500;
+      color: #050505;
+    }
+    .bit-btn--no {
+      background: transparent;
+      color: #7df9ff;
+      border: 1px solid rgb(0 229 255 / 45%);
+    }
     @keyframes bit-bubble-in {
       from { opacity: 0; transform: translate(-50%, 8px); }
       to { opacity: 1; transform: translate(-50%, 0); }
@@ -137,6 +176,7 @@ export class BitMascotComponent implements AfterViewInit, OnDestroy {
   private readonly mascotChat = inject(MascotChatService);
 
   readonly size = SIZE;
+  readonly invite = this.mascotChat.playInvite;
   readonly latestDialog = computed(() => {
     const list = this.mascotChat.dialogs();
     return list.length ? list[list.length - 1] : null;
@@ -156,6 +196,7 @@ export class BitMascotComponent implements AfterViewInit, OnDestroy {
   private clock?: THREE.Clock;
   private destroyed = false;
   private lastSeenDialogId = -1;
+  private lastSeenInviteId = -1;
 
   private state: FlickerState = 'idle';
   private stateUntil = 0;
@@ -180,6 +221,18 @@ export class BitMascotComponent implements AfterViewInit, OnDestroy {
         this.speakFlicker(d.sentiment, d.text);
       }
     });
+    effect(() => {
+      const inv = this.invite();
+      if (inv && inv.id !== this.lastSeenInviteId) {
+        this.lastSeenInviteId = inv.id;
+        this.speakFlicker('neutral', '¿Quieres jugar conmigo?');
+      }
+    });
+  }
+
+  respondInvite(accepted: boolean): void {
+    this.flicker(accepted ? 'yes' : 'no');
+    this.mascotChat.answerPlayInvite(accepted);
   }
 
   async ngAfterViewInit(): Promise<void> {

@@ -30,3 +30,12 @@ export interface Experience {
   impact: string;
   bullets?: string[];
 }
+
+export interface AiExperiment {
+  title: string;
+  status: 'active' | 'beta';
+  log: string;
+  detail: string;
+  stack: string[];
+  impact: string;
+}

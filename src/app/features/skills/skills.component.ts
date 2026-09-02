@@ -10,7 +10,7 @@ import { TiltDirective } from '../../shared/directives/tilt.directive';
   template: `
     <section id="skills" class="section">
       <div class="container" appReveal>
-        <h2 class="section-title">Stack <span class="neon-text">DevOps & IA</span></h2>
+        <h2 class="section-title">Stack <span class="neon-text">Fullstack, DevOps & IA</span></h2>
         <p class="section-subtitle">&gt; Competencias técnicas verificadas en producción</p>
       </div>
       <div class="container mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
