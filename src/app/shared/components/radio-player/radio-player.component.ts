@@ -7,6 +7,12 @@ import { IconComponent } from '../icon/icon.component';
 const TRACK_LABEL = '"Fly Forward" — raspberrymusic (CC BY 4.0)';
 const VOLUME_KEY = 'davi-radio-volume-v3';
 const BAR_COUNT = 12;
+// El archivo pesa unos 3.4MB y compite con el bundle inicial (JS + fuentes + assets 3D) por
+// ancho de banda. En vez de un timeout fijo y corto, solo declaramos error si pasan
+// STALL_TIMEOUT_MS sin ningún progreso de descarga — así una conexión lenta pero activa
+// nunca dispara un falso "no se pudo cargar".
+const STALL_TIMEOUT_MS = 15000;
+const WATCHDOG_INTERVAL_MS = 2000;
 
 @Component({
   selector: 'app-radio-player',
@@ -208,10 +214,12 @@ export class RadioPlayerComponent implements AfterViewInit, OnDestroy {
 
   private wantsToPlay = false;
   private loadingTimer?: ReturnType<typeof setTimeout>;
+  private lastProgressAt = 0;
   private onPlaying?: () => void;
   private onWaiting?: () => void;
   private onPause?: () => void;
   private onError?: () => void;
+  private onProgress?: () => void;
   private onFirstGesture?: () => void;
 
   ngAfterViewInit(): void {
@@ -233,6 +241,9 @@ export class RadioPlayerComponent implements AfterViewInit, OnDestroy {
       this.errored.set(false);
     };
     this.onWaiting = () => this.loading.set(true);
+    this.onProgress = () => {
+      this.lastProgressAt = Date.now();
+    };
     this.onPause = () => {
       if (this.wantsToPlay) return;
       this.loading.set(false);
@@ -261,6 +272,7 @@ export class RadioPlayerComponent implements AfterViewInit, OnDestroy {
     audio.addEventListener('waiting', this.onWaiting);
     audio.addEventListener('pause', this.onPause);
     audio.addEventListener('error', this.onError);
+    audio.addEventListener('progress', this.onProgress);
 
     // Los navegadores bloquean el autoplay CON sonido sin gesto del usuario, pero
     // siempre permiten autoplay silenciado. Arrancamos así y desmuteamos en el primer
@@ -290,11 +302,9 @@ export class RadioPlayerComponent implements AfterViewInit, OnDestroy {
     this.wantsToPlay = true;
     this.errored.set(false);
     this.loading.set(true);
+    this.lastProgressAt = Date.now();
 
-    clearTimeout(this.loadingTimer);
-    this.loadingTimer = setTimeout(() => {
-      if (this.loading()) this.onError?.();
-    }, 6000);
+    this.armStallWatchdog();
 
     // Un rechazo de play() suele ser una política de autoplay transitoria, no un archivo
     // roto — reintenta una vez tras un respiro. El evento 'error' real del <audio> (archivo
@@ -304,6 +314,20 @@ export class RadioPlayerComponent implements AfterViewInit, OnDestroy {
         if (this.wantsToPlay) audio.play().catch(() => {});
       }, 400);
     });
+  }
+
+  /** Reintenta cada WATCHDOG_INTERVAL_MS; solo marca error si no hubo progreso de descarga
+   * en STALL_TIMEOUT_MS — una descarga lenta pero activa nunca se declara "rota". */
+  private armStallWatchdog(): void {
+    clearTimeout(this.loadingTimer);
+    this.loadingTimer = setTimeout(() => {
+      if (!this.loading()) return;
+      if (Date.now() - this.lastProgressAt >= STALL_TIMEOUT_MS) {
+        this.onError?.();
+      } else {
+        this.armStallWatchdog();
+      }
+    }, WATCHDOG_INTERVAL_MS);
   }
 
   toggle(): void {
@@ -347,5 +371,6 @@ export class RadioPlayerComponent implements AfterViewInit, OnDestroy {
     if (this.onWaiting) audio.removeEventListener('waiting', this.onWaiting);
     if (this.onPause) audio.removeEventListener('pause', this.onPause);
     if (this.onError) audio.removeEventListener('error', this.onError);
+    if (this.onProgress) audio.removeEventListener('progress', this.onProgress);
   }
 }
